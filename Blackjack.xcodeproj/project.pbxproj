@@ -1,0 +1,322 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		67BEF688232D9FB600ADFCDF /* Dealer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 67BEF67E232D9FB600ADFCDF /* Dealer.cpp */; };
+		67BEF689232D9FB600ADFCDF /* Deck.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 67BEF680232D9FB600ADFCDF /* Deck.cpp */; };
+		67BEF68A232D9FB600ADFCDF /* Hand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 67BEF682232D9FB600ADFCDF /* Hand.cpp */; };
+		67BEF68B232D9FB600ADFCDF /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 67BEF684232D9FB600ADFCDF /* main.cpp */; };
+		67BEF68C232D9FB600ADFCDF /* PlayHand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 67BEF685232D9FB600ADFCDF /* PlayHand.cpp */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		67D2E35B232B6582000322C5 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		6780EDD7232DB77B002D7315 /* makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; path = makefile; sourceTree = "<group>"; };
+		6780EDD9232DD305002D7315 /* ReadMe.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ReadMe.txt; sourceTree = "<group>"; };
+		6780EDDA232DD31D002D7315 /* ReadMe.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ReadMe.txt; sourceTree = "<group>"; };
+		6780EDDD232DD3C3002D7315 /* documentation */ = {isa = PBXFileReference; lastKnownFileType = folder; path = documentation; sourceTree = "<group>"; };
+		6780EDDE232DD3F9002D7315 /* paper */ = {isa = PBXFileReference; lastKnownFileType = folder; path = paper; sourceTree = "<group>"; };
+		67BEF67E232D9FB600ADFCDF /* Dealer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Dealer.cpp; sourceTree = "<group>"; };
+		67BEF67F232D9FB600ADFCDF /* Dealer.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Dealer.hpp; sourceTree = "<group>"; };
+		67BEF680232D9FB600ADFCDF /* Deck.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Deck.cpp; sourceTree = "<group>"; };
+		67BEF681232D9FB600ADFCDF /* Deck.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Deck.hpp; sourceTree = "<group>"; };
+		67BEF682232D9FB600ADFCDF /* Hand.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Hand.cpp; sourceTree = "<group>"; };
+		67BEF683232D9FB600ADFCDF /* Hand.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Hand.hpp; sourceTree = "<group>"; };
+		67BEF684232D9FB600ADFCDF /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		67BEF685232D9FB600ADFCDF /* PlayHand.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PlayHand.cpp; sourceTree = "<group>"; };
+		67BEF686232D9FB600ADFCDF /* PlayHand.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = PlayHand.hpp; sourceTree = "<group>"; };
+		67BEF687232D9FB600ADFCDF /* prefix.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = prefix.hpp; sourceTree = "<group>"; };
+		67D2E35D232B6582000322C5 /* Blackjack */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Blackjack; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		67D2E35A232B6582000322C5 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		67BEF68D232D9FC000ADFCDF /* build */ = {
+			isa = PBXGroup;
+			children = (
+				6780EDDA232DD31D002D7315 /* ReadMe.txt */,
+				6780EDD7232DB77B002D7315 /* makefile */,
+			);
+			path = build;
+			sourceTree = "<group>";
+		};
+		67BEF690232DA03600ADFCDF /* calculations */ = {
+			isa = PBXGroup;
+			children = (
+				6780EDD9232DD305002D7315 /* ReadMe.txt */,
+			);
+			path = calculations;
+			sourceTree = "<group>";
+		};
+		67D2E354232B6582000322C5 = {
+			isa = PBXGroup;
+			children = (
+				67D2E35F232B6582000322C5 /* source */,
+				67BEF690232DA03600ADFCDF /* calculations */,
+				67BEF68D232D9FC000ADFCDF /* build */,
+				6780EDDD232DD3C3002D7315 /* documentation */,
+				6780EDDE232DD3F9002D7315 /* paper */,
+				67D2E35E232B6582000322C5 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		67D2E35E232B6582000322C5 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				67D2E35D232B6582000322C5 /* Blackjack */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		67D2E35F232B6582000322C5 /* source */ = {
+			isa = PBXGroup;
+			children = (
+				67BEF67E232D9FB600ADFCDF /* Dealer.cpp */,
+				67BEF67F232D9FB600ADFCDF /* Dealer.hpp */,
+				67BEF680232D9FB600ADFCDF /* Deck.cpp */,
+				67BEF681232D9FB600ADFCDF /* Deck.hpp */,
+				67BEF682232D9FB600ADFCDF /* Hand.cpp */,
+				67BEF683232D9FB600ADFCDF /* Hand.hpp */,
+				67BEF684232D9FB600ADFCDF /* main.cpp */,
+				67BEF685232D9FB600ADFCDF /* PlayHand.cpp */,
+				67BEF686232D9FB600ADFCDF /* PlayHand.hpp */,
+				67BEF687232D9FB600ADFCDF /* prefix.hpp */,
+			);
+			path = source;
+			sourceTree = SOURCE_ROOT;
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		67D2E35C232B6582000322C5 /* Blackjack */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 67D2E364232B6582000322C5 /* Build configuration list for PBXNativeTarget "Blackjack" */;
+			buildPhases = (
+				67D2E359232B6582000322C5 /* Sources */,
+				67D2E35A232B6582000322C5 /* Frameworks */,
+				67D2E35B232B6582000322C5 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Blackjack;
+			productName = Blackjack;
+			productReference = 67D2E35D232B6582000322C5 /* Blackjack */;
+			productType = "com.apple.product-type.tool";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		67D2E355232B6582000322C5 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0830;
+				ORGANIZATIONNAME = "John Nairn";
+				TargetAttributes = {
+					67D2E35C232B6582000322C5 = {
+						CreatedOnToolsVersion = 8.3.3;
+						DevelopmentTeam = 463VM8Q453;
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = 67D2E358232B6582000322C5 /* Build configuration list for PBXProject "Blackjack" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 67D2E354232B6582000322C5;
+			productRefGroup = 67D2E35E232B6582000322C5 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				67D2E35C232B6582000322C5 /* Blackjack */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		67D2E359232B6582000322C5 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				67BEF68A232D9FB600ADFCDF /* Hand.cpp in Sources */,
+				67BEF68C232D9FB600ADFCDF /* PlayHand.cpp in Sources */,
+				67BEF689232D9FB600ADFCDF /* Deck.cpp in Sources */,
+				67BEF68B232D9FB600ADFCDF /* main.cpp in Sources */,
+				67BEF688232D9FB600ADFCDF /* Dealer.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		67D2E362232B6582000322C5 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREFIX_HEADER = source/prefix.hpp;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = NO;
+				SDKROOT = macosx;
+				VALID_ARCHS = x86_64;
+			};
+			name = Debug;
+		};
+		67D2E363232B6582000322C5 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_PREFIX_HEADER = source/prefix.hpp;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				ONLY_ACTIVE_ARCH = NO;
+				SDKROOT = macosx;
+				VALID_ARCHS = x86_64;
+			};
+			name = Release;
+		};
+		67D2E365232B6582000322C5 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "Mac Developer";
+				DEVELOPMENT_TEAM = 463VM8Q453;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				VALID_ARCHS = x86_64;
+			};
+			name = Debug;
+		};
+		67D2E366232B6582000322C5 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "Mac Developer";
+				DEVELOPMENT_TEAM = 463VM8Q453;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				VALID_ARCHS = x86_64;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		67D2E358232B6582000322C5 /* Build configuration list for PBXProject "Blackjack" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				67D2E362232B6582000322C5 /* Debug */,
+				67D2E363232B6582000322C5 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		67D2E364232B6582000322C5 /* Build configuration list for PBXNativeTarget "Blackjack" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				67D2E365232B6582000322C5 /* Debug */,
+				67D2E366232B6582000322C5 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 67D2E355232B6582000322C5 /* Project object */;
+}
