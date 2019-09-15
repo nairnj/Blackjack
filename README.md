@@ -1,3 +1,4 @@
+<h1>Blackjack</h1>
 
 <p>This project contains c++ software for many calculations of blackjack expected values. Calculations for standing,
 splitting, and doubling down are fast an exact.</p>
