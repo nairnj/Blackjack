@@ -12,9 +12,9 @@
   	border-bottom-width: thin;
 }H3 {
 	font-size: 11pt;
-}
-
-P {
+}H4 {
+	font-size: 11pt;
+font-style: italic; font-weight: normal; }P {
 	font-size: 9pt;
 	line-height: 1.5;
 	margin-left: 3pt;

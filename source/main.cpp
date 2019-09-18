@@ -11,6 +11,9 @@
 #include "Deck.hpp"
 #include "Dealer.hpp"
 
+#define VERSION 1
+#define SUBVERSION 1
+
 // error codes
 enum { noErr=0, FileAccessErr, BadOptionErr, MemoryErr };
 
@@ -32,15 +35,18 @@ bool standCalcs=false;
 bool hitCalcs=false;
 bool doubleCalcs=false;
 bool comboCalcs=false;
+int comboRemove=0;
 bool approxSplitCalcs=false;
 bool exactSplitCalcs=false;
 bool exactRecursiveSplitCalcs=false;
+bool resplitAces=false;
 int residCalcs=noGriffin;
 int maxSplitHands=2;
 int maxRecursiveSplitHands=2;
 
 // prototypes
 void produceTable(ostream &,Dealer &);
+void DDandSplitRules(ostream &);
 void Usage(void);
 char *NextArgument(int,char * const [],int,char);
 
@@ -133,16 +139,16 @@ int main (int argc, char * const argv[])
 					maxRecursiveSplitHands = handParm;
 			}
 			
-			else if(opt=='i' || opt=='f' || opt=='d')
+			else if(opt=='i' || opt=='f' || opt=='d' || opt=='B')
 			{	optInd++;
 				if(optInd>=strlen(argv[parmInd]))
-				{	cerr << "Numerical option (dealer up card or desks) must follow option immediately" << endl;
+				{	cerr << "Numerical option (dealer up card or decks) must follow option immediately" << endl;
 					return BadOptionErr;
 				}
 				char numopt=argv[parmInd][optInd];
 				int num = (numopt=='T' || numopt=='t') ? TEN : (int)numopt-(int)'0';
 				if(num<ACE || num>TEN || (num>8 && opt=='d'))
-				{	cerr << "Invalid dealer up card (1-9 or T) or number of decks (1-8) setting" << endl;
+				{	cerr << "Invalid dealer up card or removal card (1-9 or T) or number of decks (1-8) setting" << endl;
 					return BadOptionErr;
 				}
 				if(opt=='i')
@@ -151,6 +157,10 @@ int main (int argc, char * const argv[])
 					upend=num;
 				else if(opt=='d')
 					ndecks=num;
+				else if(opt=='B')
+				{	comboCalcs=true;
+					comboRemove=num;
+				}
 			}
 			
 			else if(opt=='h')
@@ -171,6 +181,9 @@ int main (int argc, char * const argv[])
 			else if(opt=='m')
 				resplitting=true;
 				
+			else if(opt=='a')
+				resplitAces=true;
+			
 			else
 			{   cerr << "Unknown Blackjack option '" << argv[parmInd][optInd] << "' was used" << endl;
 				return BadOptionErr;
@@ -200,6 +213,9 @@ int main (int argc, char * const argv[])
 	// get the stream
 	ostream os((outfile!=NULL) ? fout.rdbuf() : cout.rdbuf());
 	
+	// print version number
+	cout << "Blackjack (version " << VERSION << "." << SUBVERSION << ") analysis" << endl;
+	
 	// create the dealer
 	Dealer theDealer(hitsSoft17,cacheCards);
 	cout << "Dealer cache size = " << theDealer.getCacheSize() << " in " << 
@@ -219,9 +235,24 @@ void produceTable(ostream &os,Dealer &dealer)
 {
 	int c1,c2,upcard;
 	Hand hand;
+	float cupExval[11];			// expected value each upcard
 	
 	// intialize
 	Deck theDeck(ndecks);
+	
+	// if combo calcs, set to "not set value"
+	for(int i=1;i<=10;i++) cupExval[i] = -1000.;
+	
+	// table header line
+	if(standCalcs || hitCalcs || doubleCalcs || approxSplitCalcs || exactRecursiveSplitCalcs || exactSplitCalcs)
+	{	os << "Blackjack expected value tables" << endl;
+	}
+	else if(comboCalcs)
+	{	os << "Blackjack strategy tables and game analysis" << endl;
+	}
+	else if(residCalcs!=noGriffin)
+	{	os << "Effects of card removals (in %)" << endl;
+	}
 	
 	int step = (upstart<=upend) ? 1 : -1 ;
 	for(upcard=upstart; upcard!=upend+step; upcard+=step)
@@ -304,26 +335,21 @@ void produceTable(ostream &os,Dealer &dealer)
 		*/
 		if(comboCalcs)
 		{	if(verbose)
-				cout << "... maximum of hit, stand, double" << endl;
-			os << "\nOPTIMAL STRATEGY: (H)it, (S)tand, (D)ouble, or S(P)lit (DD ";
-			if(ddFlag==DDAny)
-				os << "any two cards, " ;
-			else
-				os << "10&11 only, " ;
+				cout << "... maximum of hit, stand, double, and approximate split" << endl;
+			
+			if(comboRemove!=0)
+			{	os << "Extra removed card " << comboRemove << endl;
+				theDeck.remove(comboRemove);
+			}
+			os << "\nOPTIMAL STRATEGY: (H)it, (S)tand, (D)ouble, or S(P)lit (";
+			DDandSplitRules(os);
 			if(ddAfterSplit)
-			{	os << "DD after split, ";
 				dealer.setDDAfterSplit(ddFlag);
-			}
 			else
-			{	os << "no DD after split, ";
 				dealer.setDDAfterSplit(DDNone);
-			}
-			if(resplitting)
-				os << "resplitting allowed" ;
-			else
-				os << "no resplitting" ;
 			os << ")" << endl;
 			os << "hand\t1\t2\t3\t4\t5\t6\t7\t8\t9\t10" << endl;
+			float cval[11][11];			// to store table of results
 			for(c1=1; c1<=10; c1++)
 			{	os << c1 ;
 				for(c2=1;c2<=c1;c2++)
@@ -340,7 +366,7 @@ void produceTable(ostream &os,Dealer &dealer)
 					
 					if(c1==c2)
 					{	hand.unhit(c1);
-						splitVal=hand.approxSplitPlay(theDeck,dealer,resplitting && c1!=1);
+						splitVal=hand.approxSplitPlay(theDeck,dealer,resplitting && (c1!=1 || resplitAces));
 						hand.hit(c1);
 					}
 					else
@@ -361,11 +387,56 @@ void produceTable(ostream &os,Dealer &dealer)
 						strategy='P';
 					}
 					os << "\t" << standVal << " " << strategy;
-						
+					cval[c1][c2] = standVal;		// store in table
+					
 					theDeck.restore(c1,c2);
 				}
 				os << endl;
 			}
+			
+			// assemble upcard analysis
+			float numCards[11];
+			for(int i=1;i<10;i++)
+				numCards[i] = 4.*ndecks;
+			numCards[10] = 16.*ndecks;
+			numCards[upcard]--;			// remove dealar upcard
+			float denom = (52.*ndecks-1.f)*(52.*ndecks-2.f);
+			if(comboRemove!=0)
+			{	numCards[comboRemove]--;		// remove extra card if used
+				denom = (52.*ndecks-2.f)*(52.*ndecks-3.f);
+			}
+			
+			double ducValue = 0.;
+			for(c1=1;c1<=10;c1++)
+			{	for(c2=1;c2<=c1;c2++)
+				{	// hand weight
+					float wt = c1!=c2 ? 2.*numCards[c1]*numCards[c2]/denom :
+					numCards[c1]*(numCards[c1]-1.f)/denom;
+					ducValue += wt*cval[c1][c2];
+				}
+			}
+			
+			if(upcard==1 or upcard==10)
+			{	// ace and ten are conditioned on dealer not having blacking
+				// here account for chance dealer does have blackjack
+				os << "Cumulative\t" << ducValue << "\tif dealer does not have BJ" << endl;
+				float dealerBJ = numCards[11-upcard]/(52.*ndecks-1.f);
+				float playerBJ = 2.f*numCards[1]*numCards[10]/denom;
+				os << "Dealer BJ\t" << dealerBJ << endl;
+				os << "Player BJ\t" << playerBJ << endl;
+				// get total expected value
+				ducValue = ducValue*(1.-dealerBJ) - (1.-playerBJ)*dealerBJ;
+				os << "Cumulative\t" << ducValue << "\ttotal" << endl;
+			}
+			else
+				os << "Cumulative\t" << ducValue << endl;
+			
+			// save final cumulative value
+			cupExval[upcard] = ducValue;
+			
+			// restore extra removed card
+			if(comboRemove!=0)
+				theDeck.restore(comboRemove);
 		}
 		
 		// approximate splitting
@@ -466,11 +537,10 @@ void produceTable(ostream &os,Dealer &dealer)
 			
 			float minExval = -.25;
 			if(residCalcs==fullDeckGriffin)
-				cout << "Split pair (for splitting only) removed" << endl;
+				os << "Split pair (for splitting only) removed" << endl;
 			else
-				cout << "Dealer up card and split pair (for splitting only) removed" << endl;
+				os << "Dealer up card and split pair (for splitting only) removed" << endl;
 			os << "\nhand\tmean\tA\t2\t3\t4\t5\t6\t7\t8\t9\tT" << endl;
-			float ndecks=theDeck.getDecks();
 			
 			// restore upcard to reproduce Giffin tables
 			if(residCalcs==fullDeckGriffin)
@@ -478,16 +548,20 @@ void produceTable(ostream &os,Dealer &dealer)
 			
 			os << "HITTING HARD HANDS" << endl;
 			for(c1=17;c1>=12;c1--)
-			{	// mean
+			{
+				// mean
 				hand.reset(10,c1-10);			// fill hand, but do not remove from theDeck
-				float mean = 0.5*hand.doubleExval(theDeck,dealer)-hand.standExval(theDeck,dealer);
+				//float mean = 0.5*hand.doubleExval(theDeck,dealer)-hand.standExval(theDeck,dealer);
+				float mean = hand.hitExval(theDeck,dealer)-hand.standExval(theDeck,dealer);
 				os << c1 << "\t" << 100.*mean ;
+				
 				
 				for(c2=ACE;c2<=TEN;c2++)
 				{	// remove one card
 					theDeck.remove(c2);
-					float exval = 0.5*hand.doubleExval(theDeck,dealer)-hand.standExval(theDeck,dealer);
-					os << "\t" << 100.*(exval-mean)*ndecks ;
+					//float exval = 0.5*hand.doubleExval(theDeck,dealer)-hand.standExval(theDeck,dealer);
+					float exval = hand.hitExval(theDeck,dealer)-hand.standExval(theDeck,dealer);
+					os << "\t" << 100.*(exval-mean) ;
 					theDeck.restore(c2);
 				}
 				
@@ -506,7 +580,7 @@ void produceTable(ostream &os,Dealer &dealer)
 				{	// remove one card
 					theDeck.remove(c2);
 					float exval = hand.hitExval(theDeck,dealer)-hand.standExval(theDeck,dealer);
-					os << "\t" << 100.*(exval-mean)*ndecks ;
+					os << "\t" << 100.*(exval-mean) ;
 					theDeck.restore(c2);
 				}
 				
@@ -525,7 +599,7 @@ void produceTable(ostream &os,Dealer &dealer)
 				{	// remove one card
 					theDeck.remove(c2);
 					float exval = hand.doubleExval(theDeck,dealer)-hand.hitExval(theDeck,dealer);
-					os << "\t" << 100.*(exval-mean)*ndecks ;
+					os << "\t" << 100.*(exval-mean) ;
 					theDeck.restore(c2);
 				}
 				
@@ -547,7 +621,7 @@ void produceTable(ostream &os,Dealer &dealer)
 					theDeck.remove(c2);
 					alt = hit ? hand.hitExval(theDeck,dealer) : hand.standExval(theDeck,dealer) ;
 					float exval = hand.doubleExval(theDeck,dealer)-alt;
-					os << "\t" << 100.*(exval-mean)*ndecks ;
+					os << "\t" << 100.*(exval-mean) ;
 					theDeck.restore(c2);
 				}
 				
@@ -555,24 +629,14 @@ void produceTable(ostream &os,Dealer &dealer)
 			}
 
 			os << "SPLITTING (";
+			DDandSplitRules(os);
+			os << ")" << endl;
 			if(ddAfterSplit)
-			{	os << "DD after split ";
 				dealer.setDDAfterSplit(ddFlag);
-				if(ddFlag==DDAny)
-					os << "any two cards, " ;
-				else
-					os << "10and 11 only, ";
-			}
 			else
-			{	os << "no DD after split, ";
 				dealer.setDDAfterSplit(DDNone);
-			}
-			if(resplitting)
-				os << "resplitting allowed, except aces)" << endl;
-			else
-				os << "no resplitting)" << endl;
 			for(c1=TEN;c1>=ACE;c1--)
-			{	bool handResplit = c1==ACE ? false : resplitting;
+			{	bool handResplit = (c1==ACE && !resplitAces) ? false : resplitting;
 			
 				// mean
 				hand.reset(c1,c1,theDeck);			// remove from deck too
@@ -590,7 +654,7 @@ void produceTable(ostream &os,Dealer &dealer)
 					alt = hit ? hand.hitExval(theDeck,dealer) : hand.standExval(theDeck,dealer) ;
 					hand.unhit(c1);
 					float exval = hand.approxSplitPlay(theDeck,dealer,handResplit)-alt;
-					os << "\t" << 100.*(exval-mean)*ndecks ;
+					os << "\t" << 100.*(exval-mean) ;
 					theDeck.restore(c2);
 				}
 				
@@ -606,6 +670,51 @@ void produceTable(ostream &os,Dealer &dealer)
 		// return upcard to the deck
 		theDeck.restore(upcard);
 	}
+	
+	// More output if possible
+	if(comboCalcs)
+	{	// check for all upcards
+		float gameExval = 0.;
+		float wt = 4./52.;
+		for(int i=1;i<10;i++) gameExval += wt*cupExval[i];
+		gameExval += 4.*wt*cupExval[10];
+		
+		// were they all done?
+		if(gameExval > -10.)
+		{	os << "\nFull Game Analysis" << endl;
+			os << "Decks\t" << 1 << endl;
+			if(hitsSoft17)
+				os << "Dealer hits soft 17" << endl;
+			else
+				os << "Dealer stands on soft 17" << endl;
+			DDandSplitRules(os);
+			os << endl;
+			os << "Expected Value\t" << gameExval << endl;
+		}
+	}
+}
+
+// Ouput DD and splitting rules on current line
+void DDandSplitRules(ostream &os)
+{
+	os << "DD ";
+	if(ddFlag==DDAny)
+		os << "any two cards, " ;
+	else
+		os << "10&11 only, " ;
+	if(ddAfterSplit)
+		os << "DD after split, ";
+	else
+		os << "no DD after split, ";
+	if(resplitting)
+	{	os << "resplitting allowed" ;
+		if(resplitAces)
+			os << ", including aces";
+		else
+			os << ", except aces";
+	}
+	else
+		os << "no resplitting" ;
 }
 
 // print help and user message
@@ -616,13 +725,13 @@ void Usage(void)
 			"   Blackjack [-options]\n\n"
             "This program calculates expected values for the game of blackjack.\n"
             "The table of results can include various expected values and can be\n"
-            "written to standard output or diverted to a file.\n\n"
+            "written to standard output or diverted to a tab-delimited file.\n\n"
             "Calculation Options (can be grouped and '-' is optional):\n"
             "    -S                 Expected values for standing all hands\n"
             "    -H                 Expected values for hitting all hands and following\n"
 			"                          basic strategy to completion\n"
             "    -D                 Expected values for doubling down all hands\n"
-			"    -C                 Combo table show maximum of S, H, and D tables\n"
+			"    -C                 Combo table show maximum of S, H, D, and A tables\n"
             "    -A                 Approximate pair splitting expected values\n"
             "    -E2                Exact pair splitting expected values to given number of hands\n"
 			"                          (immediately after, 2-9)\n"
@@ -642,14 +751,16 @@ void Usage(void)
 			"    -r                 Double down 10 & 11 only (Reno rules, Combo/Griffin tables only)\n"
 			"    -n                 No double down after splitting (Combo/Griffin tables only)\n"
  			"    -m                 Replitting allowed (Combo/Griffin tables only)\n"
+ 			"    -a                 Replitting aces allowed (Combo/Griffin tables only)\n"
             "    -v                 Verbose to list progress to std out\n"
 			"                          (only applies when -o is active)\n"
             "    -?                 Print this help information\n"
 			"\nDefaults:\n"
 			"   No expected values, std out, 1 deck, stand soft 17, dealer up card range\n"
 			"       1 to 10, dealer cache size 0, and not verbose\n"
+			"	Rules: DD any two cards, no resplitting, DD after splitting allowed\n"
 			"\nExample: complete tables using approximate splitting methods\n"
-			"   Blackjack SHDAo bjtable.txt\n"
+			"   Blackjack -SHDA -c 18 -o bjtable.txt\n"
 		 << endl;
 }
 

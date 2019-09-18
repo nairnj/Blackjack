@@ -96,16 +96,16 @@
 		67D2E35F232B6582000322C5 /* source */ = {
 			isa = PBXGroup;
 			children = (
+				67BEF684232D9FB600ADFCDF /* main.cpp */,
+				67BEF687232D9FB600ADFCDF /* prefix.hpp */,
 				67BEF67E232D9FB600ADFCDF /* Dealer.cpp */,
 				67BEF67F232D9FB600ADFCDF /* Dealer.hpp */,
 				67BEF680232D9FB600ADFCDF /* Deck.cpp */,
 				67BEF681232D9FB600ADFCDF /* Deck.hpp */,
 				67BEF682232D9FB600ADFCDF /* Hand.cpp */,
 				67BEF683232D9FB600ADFCDF /* Hand.hpp */,
-				67BEF684232D9FB600ADFCDF /* main.cpp */,
 				67BEF685232D9FB600ADFCDF /* PlayHand.cpp */,
 				67BEF686232D9FB600ADFCDF /* PlayHand.hpp */,
-				67BEF687232D9FB600ADFCDF /* prefix.hpp */,
 			);
 			path = source;
 			sourceTree = SOURCE_ROOT;
