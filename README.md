@@ -12,3 +12,5 @@ exact splitting calculations are now possible, but still take a long time.</p>
 
 <p>Besides expected value calculations, two software options can calculate tables used in counting theories that were
 derived by Peter A. Griffin in the "Theory of Blackjack." In brief, these calculations find the <i>change</i> in expected values caused by removing one specific card from the deck.</p>
+
+<p>See <code>Blackjack.html</code> file in the <code>documentation</code> folder for details on compiling and running the calculations.</p>
