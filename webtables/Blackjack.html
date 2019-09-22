@@ -1,0 +1,193 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"><html><head>	<meta http-equiv="content-type" content="text/html;charset=ISO-8859-1">	<title>Blackjack Software</title>	<link rel="stylesheet" type="text/css" href="etables.css"></head><body>
+
+<p class="links">
+<a href="index.html">[Home]</a> &rarr; [Blackjack Software]</p>
+
+<h1>Blackjack Software</h1>
+
+<p>This web site describes the public-domain, command-line tool for calculation of blackjack expected values.
+</p>
+
+<div class="contents">
+<b>Contents</b>
+<ul class="index">
+<li><a href="#obtain">Obtaining and Compiling the Code</a></li>
+<li><a href="#run">Running the Code</a></li>
+<li><a href="#sample">Sample Calculations</a></li>
+</ul>
+</div>
+
+<a name="obtain"></a><h1>Obtaining and Compiling the Code</h1>
+
+<p>The command-line tool called <code>Blackjack</code> is written in standard <code>C++</code> code. You can download the source code and compile on any system that supports <code>C++</code> code.
+</p>
+
+<dl>
+
+<dt>Obtaining The Code</dt>
+<dd>Click <a href="BJSource.zip">here</a> to download a zip file with the complete <code>C++</code> source code to the Blackjack command-line tool. To get the files, unzip them from the zip archive.
+</dd>
+
+<dt>Command-Line Compiling the Code</dt>
+<dd>In a command-line environment, navigate to the folder with the source code (<i>e.g.</i>, <code>srcFolder</code>) and use the <code>make</code> command:
+<pre>
+cd srcFolder
+make
+make install
+</pre>
+The &quot;<code>make install</code>&quot; command will transfer the executable file to an install folder. By default, the executable will be called <code>Blackjack</code> and the install location will be the <code>~/bin</code> folder in your home directory. You can change these defaults by editing the <code>makefile</code> and changing the settings for the <code>output</code> and <code>ioutput</code> variables.
+</dd>
+
+<dt>Compiling in a Development Environment</dt>
+<dd>If you prefer to compile in an integrated development environment (IDE), the process should be simple. Create a new <code>C++</code> project and add all the files in the downloaded source code. The details will depend on your specific IDE, but should be straightforward. Everything you need is in the source code files.
+</dl>
+
+<a name="run"></a><h1>Running the Code</h1>
+
+<p>The <code>Blackjack</code> executable is meant to be run in a command-line environment. Each run does a selected set of calculations and outputs the results to the command-line window or to a selected file. The format is
+</p>
+
+<pre>
+Blackjack [calculations] [options]
+</pre>
+
+<p>where <a href="#calcs"><code>[calculations]</code></a> specify the desired calculations to be run and the <a href="#options"><code>[options]</code></a> select various options for running those calculations.
+</p>
+
+<a name="calcs"></a><h3>Calculations</h3>
+
+<p>The follow calculations can be run. They can be done individually or in combination:</p>
+
+<dl>
+<dt>-S</dt>
+<dd>Find expected values for standing on all possible two-card initial hands.
+</dd>
+
+<dt>-H</dt>
+<dd>Find expected values for hitting all possible two-card initial hands and then continuing to play by basic strategy.
+</dd>
+
+<dt>-D</dt>
+<dd>Find expected values for doubling down on all possible two-card initial hands.
+</dd>
+
+<dt>-A</dt>
+<dd>Find the expected values for splitting all possible pairs of cards. For each pair the table will include results for splitting and resplitting. For each of them, the table will have results for doubling down after splitting not allowed, allowed on any two cards, or allowed only on hands of 10 or 11. Each line will have six results. The calculations when resplitting is not allowed use methods developed by Peter Griffin [<a href="#griffin">1</a>]. The calculations when resplitting is allowed use the new and highly accurate approximate methods developed by the author [<a href="#nairn">2</a>].
+</dd>
+
+<dt>-En</dt>
+<dd>Find the expected values for splitting all possible pairs of cards with resplitting allowed up to a making of <code>n</code> hands (where <code>n</code> is the number immediately after the <code>E</code>). This calculation uses the methods developed by the author that make them possible [<a href="#nairn">2</a>], but still require a lengthy calculation. For each pair the table will include three results for doubling down after splitting not allowed, allowed on any two cards, or allowed only on hands of 10 or 11. For interactive splitting calculations, you should use the approximate approach in the <code>-A</code> option. For exact results using the <code>-En</code> option you can refer to <a href="index.html#tables">tabulated results</a> on this web site or be prepared to dedicate are large amount of computer time.
+</dd>
+
+<dt>-R2</dt>
+<dd>This option provides an alternate method for exact splitting calculations. It is less efficient that the <code>-En</code> option and should never be used. It is the &quot;Recursive&quot; method described in a paper by the author [<a href="#nairn">2</a>].
+</dd>
+
+<dt>-C</dt>
+<dd>This option considers each player hand against the current dealer up card, finds expected values for standing, hitting, doubling down, and splitting (when allowed) and outputs the optimum choice (<i>i.e.</i>, the highest expected value) and which option was the optimum choice (<i>i.e.</i>, <code>S</code>, <code>H</code>, <code>D</code>, or <code>P</code> for stand, hit, double, or split). For doubling down and splitting, the expected value will be calculated only for the current rules. Use the <code>-l</code> or <code>-r</code> option to set the doubling down rule and the <code>-n</code> and <code>-m</code> options to set the splitting rules for the output table. The splitting calculations use the approximate methods (see <code>-A</code> option).
+</dd>
+
+<dt>-G</dt>
+<dd>Peter Griffin's book [<a href="#griffin">1</a>] describes a set of blackjack tables that considers expected value for each strategy decision (<i>e.g.</i>, hitting an abstract total of 14 <i>vs.</i> dealer up card 7). For each decision it calculates the difference between that decision and the opposite decision (<i>e.g.</i>, hitting vs. standing) calling that the &quot;mean.&quot; It then repeats the calculation for decks in which a single card of one denomination is removed and finds the <i>change</i> in mean value for each type of removed card calling that the &quot;effect of card removal.&quot; The full table thus has 11 calculations - one for the mean value and one for effect of removing each card (1 through 9 and T). For doubling down and splitting, the table will be calculated only for the current rules. Use the <code>-l</code> or <code>-r</code> option to set the doubling down rule and the <code>-n</code> and <code>-m</code> options to set the splitting rules for the output table. The splitting calculations use the approximate methods (see <code>-A</code> option).<br><br>
+
+This command calculates the mean value with a full deck (<i>i.e.</i>, the player cards and the dealer up card are not removed from the deck). This approach is identical to the one taken by Griffin [<a href="#griffin">1</a>] although the results are not identical to Griffin's tables. The reason for the discrepancy is not known, but these results are believed to be accurate. The output table will list means and effects in percents. The table will include only strategy decisions for which the mean value is greater than -25%; those with lower means are unlikely to be relevant in counting calculations. See Griffin's book for more details [<a href="#griffin">1</a>].
+</dd>
+
+<dt>-g</dt>
+<dd>This command calculates the same Griffin tables as the <code>-G</code> option except that it starts with a deck in which the dealer up card has been removed. The approach was mentioned by Griffin [<a href="#griffin">1</a>] and might provide tables for slightly more accurate counting calculations.
+</dd>
+
+</dl>
+
+<a name="options"></a><h3>Options</h3>
+
+<dl>
+
+<dt>-o fname<dt>
+<dd>By default the results are sent to standard output. Use this option to divert the
+results to a tab-delimited plain-text file. Give the output filename in <code>fname</code>.
+</dd>
+
+<dt>-d2</dt>
+<dd>Set the number of decks. The number must follow the <code>d</code> without a space and must be in the range 1 to 8. The default is 1 deck.
+</dd>
+
+<dt>-s or -h</dt>
+<dd>Set the dealer play. The <code>-s</code> options sets the dealer to stand on soft 17; the <code>-h</code> option sets the dealer to hit soft 17. The default is dealer stand on soft 17.
+</dd>
+
+<dt>-i4 -f8</dt>
+<dd>The output table will include expected values for dealer up cards from the initial or <code>-i</code> option to the final or <code>-f</code> option. The card number must follow the <code>i</code> or <code>f</code> without a space and be 1 to 9 or <code>T</code> for ten. The sequence can be increasing or decreasing depending on whether the final value is higher or lower than the initial value. The default settings are initial card 1 (or ace) and final card <code>T</code>.
+</dd>
+
+<dt>-l or -r</dt>
+<dd>Set the doubling down rules. This rule is only needed when calculating Combination (option <code>-C</code>) or Griffin (options <code>-G</code> and <code>-g</code>) tables. The settings are <code>-l</code> for doubling down on any two cards (Las Vegas rules) or <code>-r</code> for doubling down on 10 &amp; 11 only (Reno rules). The default is <code>-l</code>.
+</dd>
+
+<dt>-n</dt>
+<dd>Set the doubling down after splitting rule. This rule is only needed when calculating Combination (option <code>-C</code>) or Griffin (options <code>-G</code> and <code>-g</code>) tables. By default doubling down after splitting is allowed. Use this <code>-n</code> option to prohibit it. When doubling down after splitting is allowed, it will use the current doubling down rule set with the <code>-l</code> or <code>-r</code> commands.
+</dd>
+
+<dt>-m</dt>
+<dd>Set the resplitting rule. This rule is only needed when calculating Combination (option <code>-C</code>) or Griffin (options <code>-G</code> and <code>-g</code>) tables. By default resplitting is not allowed. Use this <code>-m</code> option to allow resplitting.
+</dd>
+
+<dt>-c num</dt>
+<dd>A dealer cache helps the calculations run much faster. The details are described in a paper by the author [<a href="#nairn">2</a>]. The <code>num</code> is the size of the cache and is limited to 0 through 23. A size of 15 is sufficient for most calculations. Exact splitting calculations can benefit from a larger cache. The maximum size of 23 requires 2.23 G or memory for the cache; if you have less memory an error will result and you will need to reduce the cache size.
+</dd>
+
+<dt>-v</dt>
+<dd>When used, the calculations will provide verbose feedback to standard output. This output will only appear with the <code>-o</code> option is used to divert calculations to a file.
+</dd>
+
+<dt>-?</dt>
+<dd>Print a list of all command options with brief descriptions.
+</dd>
+
+</dl>
+
+
+<a name="sample"></a><h1>Sample Calculations</h1>
+
+<p>This section lists some sample calculations. The first few can generate all the results in the <a href="index.html#tables">posted tables</a>.
+</p>
+
+<dl>
+
+<dt>Blackjack -SHDA -d1 -c 18 -o bjtable.txt</dt>
+<dd>This command generates a complete table for a single deck game when the dealer stands on soft 17. The results would be identical to the posted <a href="OneDeck.html">single deck results</a> except would only include the approximate splitting results.
+</dd>
+
+<dt>Blackjack -SHDA -i1f6 -h -d1 -c 18 -o bjtable.txt</dt>
+<dd>This command generates a complete table for a single deck game when the dealer hits 17. The results would be identical to the posted <a href="OneDeck.html">single deck results</a> except would only include the approximate splitting results. The results for dealer up card 7 to ten are identical for dealer stands or hits soft 17. Thus if the results when dealer stands on soft 17 are complete, the results for dealer hits soft 17 need only do up cards ace (or 1) through 6)
+</dd>
+
+<dt>Blackjack -E2 -d1 -c 23 -o bjtable.txt</dt>
+<dd>This command generates a table of exact expected values for pair splitting when resplitting is not allowed in a single deck game when the dealer stands on soft 17. The results would be identical to the exact splitting sections of the <a href="OneDeck.html">single deck results</a>. Warning, this command would take a long time run.
+</dd>
+
+<dt>Blackjack -E4 -d1 -c 23 -o bjtable.txt</dt>
+<dd>This command generates a table of exact expected values for pair splitting when resplitting is allowed (to a maximum of four hands) in a single deck game when the dealer stands on soft 17. The results would be identical to the exact splitting sections of the <a href="OneDeck.html">single deck results</a>. Warning, this command would take about 45 days to run on a machine with a 3 GHz processor. A better approach is to submit jobs on separate processors and use the <code>-i</code> and <code>-f</code> options to set each job to get results for a single up card.
+</dd>
+
+<dt>Blackjack -C -d4 -l -m -c 18 -o bjtable.txt</dt>
+<dd>This command calculates combination tables for all dealer up cards in a four deck game with doubling down on any two cards, doubling down after splitting allowed, and resplitting allowed.
+</dd>
+
+<dt>Blackjack -G -d1 -r -n -c 18 -o bjtable.txt</dt>
+<dd>This command calculates Griffin tables [<a href="#griffin">1</a>] for all dealer up cards in a single deck game with doubling down on 10 &amp; 11 only, no doubling down after splitting allowed, and resplitting not allowed.
+</dd>
+
+</dl>
+
+<h1>References</h1>
+
+<ol>
+
+<li><a name="griffin"></a>P. A. Griffin, &quot;The Theory of Blackjack,&quot; Sixth Edition. Huntington Press, Las Vegas, NV, 1999.
+</li>
+
+<li><a name="nairn"></a>J. A. Nairn, &quot;Exact Calculation of Expected Values for Splitting Pairs in Blackjack,&quot; submitted (2008). (see <a href="index.html#paper">here</a> for details).
+
+</body>
+</html>
