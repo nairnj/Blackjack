@@ -20,7 +20,7 @@ enum { noErr=0, FileAccessErr, BadOptionErr, MemoryErr };
 // Griffin table
 enum { noGriffin,fullDeckGriffin,upcardRemovedGriffin };
 
-// global defaults
+// global settings (set in main, then not changed)
 bool hitsSoft17=false;
 int ddFlag=DDAny;
 bool ddAfterSplit=true;
@@ -233,14 +233,11 @@ int main (int argc, char * const argv[])
 // table of standing, hitting, and doubling down expected values
 void produceTable(ostream &os,Dealer &dealer)
 {
-	int c1,c2,upcard;
-	Hand hand;
-	float cupExval[11];			// expected value each upcard
-	
 	// intialize
 	Deck theDeck(ndecks);
 	
 	// if combo calcs, set to "not set value"
+	float cupExval[11];			// expected value each upcard
 	for(int i=1;i<=10;i++) cupExval[i] = -1000.;
 	
 	// table header line
@@ -254,7 +251,9 @@ void produceTable(ostream &os,Dealer &dealer)
 	{	os << "Effects of card removals (in %)" << endl;
 	}
 	
-	int step = (upstart<=upend) ? 1 : -1 ;
+	// loop over dealer upcards
+	Hand hand;
+	int upcard, step = (upstart<=upend) ? 1 : -1 ;
 	for(upcard=upstart; upcard!=upend+step; upcard+=step)
 	{	dealer.setUpcard(upcard,theDeck);
 	
@@ -275,9 +274,9 @@ void produceTable(ostream &os,Dealer &dealer)
 				cout << "... standing" << endl;
 			os << "\nSTANDING" << endl;
 			os << "hand\t1\t2\t3\t4\t5\t6\t7\t8\t9\t10" << endl;
-			for(c1=1; c1<=10; c1++)
+			for(int c1=1; c1<=10; c1++)
 			{	os << c1 ;
-				for(c2=1;c2<=c1;c2++)
+				for(int c2=1;c2<=c1;c2++)
 				{	// standing expected values
 					hand.reset(c1,c2,theDeck);
 					if(hand.isNatural())
@@ -297,9 +296,9 @@ void produceTable(ostream &os,Dealer &dealer)
 			os << "\nHITTING" << endl;
 			os << "hand\t1\t2\t3\t4\t5\t6\t7\t8\t9\t10" << endl;
 			
-			for(c1=1; c1<=10; c1++)
+			for(int c1=1; c1<=10; c1++)
 			{	os << c1  ;
-				for(c2=1;c2<=c1;c2++)
+				for(int c2=1;c2<=c1;c2++)
 				{	// hitting expected values
 					hand.reset(c1,c2,theDeck);
 					os << "\t" << hand.hitExval(theDeck,dealer) ;
@@ -315,9 +314,9 @@ void produceTable(ostream &os,Dealer &dealer)
 				cout << "... doubling down" << endl;
 			os << "\nDOUBLING DOWN" << endl;
 			os << "hand\t1\t2\t3\t4\t5\t6\t7\t8\t9\t10" << endl;
-			for(c1=ACE; c1<=TEN; c1++)
+			for(int c1=ACE; c1<=TEN; c1++)
 			{	os << c1 ;
-				for(c2=1;c2<=c1;c2++)
+				for(int c2=1;c2<=c1;c2++)
 				{	// standing expected values
 					hand.reset(c1,c2,theDeck);
 					os << "\t" << hand.doubleExval(theDeck,dealer) ;
@@ -350,9 +349,9 @@ void produceTable(ostream &os,Dealer &dealer)
 			os << ")" << endl;
 			os << "hand\t1\t2\t3\t4\t5\t6\t7\t8\t9\t10" << endl;
 			float cval[11][11];			// to store table of results
-			for(c1=1; c1<=10; c1++)
+			for(int c1=1; c1<=10; c1++)
 			{	os << c1 ;
-				for(c2=1;c2<=c1;c2++)
+				for(int c2=1;c2<=c1;c2++)
 				{	float standVal=1.5,hitVal,ddVal,splitVal;
 					
 					hand.reset(c1,c2,theDeck);
@@ -368,6 +367,7 @@ void produceTable(ostream &os,Dealer &dealer)
 					{	hand.unhit(c1);
 						splitVal=hand.approxSplitPlay(theDeck,dealer,resplitting && (c1!=1 || resplitAces));
 						hand.hit(c1);
+						//splitVal=-5.;				// hack to prohibit splitting
 					}
 					else
 						splitVal=-5.;
@@ -388,6 +388,7 @@ void produceTable(ostream &os,Dealer &dealer)
 					}
 					os << "\t" << standVal << " " << strategy;
 					cval[c1][c2] = standVal;		// store in table
+					//cval[c1][c2] = (int)(100000000.*standVal+0.5)/100000000.;		// truncate digits
 					
 					theDeck.restore(c1,c2);
 				}
@@ -407,8 +408,8 @@ void produceTable(ostream &os,Dealer &dealer)
 			}
 			
 			double ducValue = 0.;
-			for(c1=1;c1<=10;c1++)
-			{	for(c2=1;c2<=c1;c2++)
+			for(int c1=1;c1<=10;c1++)
+			{	for(int c2=1;c2<=c1;c2++)
 				{	// hand weight
 					float wt = c1!=c2 ? 2.*numCards[c1]*numCards[c2]/denom :
 					numCards[c1]*(numCards[c1]-1.f)/denom;
@@ -446,7 +447,7 @@ void produceTable(ostream &os,Dealer &dealer)
 			os << "\nAPPROXIMATE SPLITTING" << endl;
 			os << "RS\tNo\tNo\tNo\tYes\tYes\tYes" << endl;
 			os << "DD\tNo\tAny\t10&11\tNo\tAny\t10&11" << endl;
-			for(c1=ACE; c1<=TEN; c1++)
+			for(int c1=ACE; c1<=TEN; c1++)
 			{	os << c1 << "," << c1 ;
 				
 				// hand with one card, but remove second one too
@@ -471,7 +472,7 @@ void produceTable(ostream &os,Dealer &dealer)
 			os << "\nEXACT SPLITTING (Recursive Method)" << endl;
 			os << "MH\t" << maxRecursiveSplitHands << "\t" << maxRecursiveSplitHands << "\t" << maxRecursiveSplitHands << endl;
 			os << "DD\tNo\tAny\t10&11" << endl;
-			for(c1=ACE; c1<=TEN; c1++)
+			for(int c1=ACE; c1<=TEN; c1++)
 			{	os << c1 << "," << c1 ;
 				
 				hand.reset(c1,c1,theDeck);
@@ -498,7 +499,7 @@ void produceTable(ostream &os,Dealer &dealer)
 			{	os << "Out of memory creating hand hash table for exact splitting calculations" << endl;
 				return;
 			}
-			for(c1=ACE; c1<=TEN; c1++)
+			for(int c1=ACE; c1<=TEN; c1++)
 			{	os << c1 << "," << c1 ;
 				
 				hand.reset(c1,c1,theDeck);
@@ -547,7 +548,7 @@ void produceTable(ostream &os,Dealer &dealer)
 				dealer.makeUnremovable(theDeck);
 			
 			os << "HITTING HARD HANDS" << endl;
-			for(c1=17;c1>=12;c1--)
+			for(int c1=17;c1>=12;c1--)
 			{
 				// mean
 				hand.reset(10,c1-10);			// fill hand, but do not remove from theDeck
@@ -556,7 +557,7 @@ void produceTable(ostream &os,Dealer &dealer)
 				os << c1 << "\t" << 100.*mean ;
 				
 				
-				for(c2=ACE;c2<=TEN;c2++)
+				for(int c2=ACE;c2<=TEN;c2++)
 				{	// remove one card
 					theDeck.remove(c2);
 					//float exval = 0.5*hand.doubleExval(theDeck,dealer)-hand.standExval(theDeck,dealer);
@@ -569,14 +570,14 @@ void produceTable(ostream &os,Dealer &dealer)
 			}
 			
 			os << "HITTING SOFT HANDS" << endl;
-			for(c1=19;c1>=17;c1--)
+			for(int c1=19;c1>=17;c1--)
 			{	// mean
 				hand.reset(1,c1-11);
 				float mean = hand.hitExval(theDeck,dealer)-hand.standExval(theDeck,dealer);
 				if(mean < minExval) continue;
 				os << c1 << "\t" << 100.*mean ;
 				
-				for(c2=ACE;c2<=TEN;c2++)
+				for(int c2=ACE;c2<=TEN;c2++)
 				{	// remove one card
 					theDeck.remove(c2);
 					float exval = hand.hitExval(theDeck,dealer)-hand.standExval(theDeck,dealer);
@@ -588,14 +589,14 @@ void produceTable(ostream &os,Dealer &dealer)
 			}
 
 			os << "HARD DOUBLING DOWN" << endl;
-			for(c1=11;c1>=7;c1--)
+			for(int c1=11;c1>=7;c1--)
 			{	// mean
 				hand.reset(5,c1-5);
 				float mean = hand.doubleExval(theDeck,dealer)-hand.hitExval(theDeck,dealer);
 				if(mean < minExval) continue;
 				os << c1 << "\t" << 100.*mean ;
 				
-				for(c2=ACE;c2<=TEN;c2++)
+				for(int c2=ACE;c2<=TEN;c2++)
 				{	// remove one card
 					theDeck.remove(c2);
 					float exval = hand.doubleExval(theDeck,dealer)-hand.hitExval(theDeck,dealer);
@@ -607,7 +608,7 @@ void produceTable(ostream &os,Dealer &dealer)
 			}
 			
 			os << "SOFT DOUBLING DOWN" << endl;
-			for(c1=20;c1>=13;c1--)
+			for(int c1=20;c1>=13;c1--)
 			{	// mean
 				hand.reset(1,c1-11);
 				bool hit = hand.twoCardHit(theDeck,dealer);
@@ -616,7 +617,7 @@ void produceTable(ostream &os,Dealer &dealer)
 				if(mean < minExval) continue;
 				os << "A," << c1-11 << "\t" << 100.*mean ;
 				
-				for(c2=ACE;c2<=TEN;c2++)
+				for(int c2=ACE;c2<=TEN;c2++)
 				{	// remove one card
 					theDeck.remove(c2);
 					alt = hit ? hand.hitExval(theDeck,dealer) : hand.standExval(theDeck,dealer) ;
@@ -635,7 +636,7 @@ void produceTable(ostream &os,Dealer &dealer)
 				dealer.setDDAfterSplit(ddFlag);
 			else
 				dealer.setDDAfterSplit(DDNone);
-			for(c1=TEN;c1>=ACE;c1--)
+			for(int c1=TEN;c1>=ACE;c1--)
 			{	bool handResplit = (c1==ACE && !resplitAces) ? false : resplitting;
 			
 				// mean
@@ -647,7 +648,7 @@ void produceTable(ostream &os,Dealer &dealer)
 				if(-fabs(mean) < minExval) continue;
 				os << c1 << "," << c1 << "\t" << 100.*mean ;
 				
-				for(c2=ACE;c2<=TEN;c2++)
+				for(int c2=ACE;c2<=TEN;c2++)
 				{	// remove one card
 					theDeck.remove(c2);
 					hand.hit(c1);
