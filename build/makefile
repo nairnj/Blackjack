@@ -51,6 +51,7 @@ Deck = $(src)/Deck
 Dealer = $(src)/Dealer
 Hand = $(src)/Hand
 PlayHand = $(src)/PlayHand
+headers = -I$(src)/Headers
 
 # -------------------------------------------------------------------------
 # all compiled objects
@@ -64,19 +65,19 @@ Blackjack : $(objects)
 # -------------------------------------------------------------------------
 # All source code files
 main.o : $(main).cpp $(Deck).hpp $(Hand).hpp $(Dealer).hpp $(prefix)
-	$(CC) $(CFLAGS) -include $(prefix) $(main).cpp
+	$(CC) $(CFLAGS) $(headers) -include $(prefix) $(main).cpp
 	
 Deck.o : $(Deck).hpp $(Dealer).hpp $(prefix)
-	$(CC) $(CFLAGS) -include $(prefix) $(Deck).cpp
+	$(CC) $(CFLAGS) $(headers) -include $(prefix) $(Deck).cpp
 	
 Dealer.o : $(Dealer).hpp $(Deck).hpp $(Hand).hpp $(PlayHand).hpp $(prefix)
-	$(CC) $(CFLAGS) -include $(prefix) $(Dealer).cpp
+	$(CC) $(CFLAGS) $(headers) -include $(prefix) $(Dealer).cpp
 	
 Hand.o : $(Hand).hpp $(Deck).hpp $(Dealer).hpp $(PlayHand).hpp $(prefix)
-	$(CC) $(CFLAGS) -include $(prefix) $(Hand).cpp
+	$(CC) $(CFLAGS) $(headers) -include $(prefix) $(Hand).cpp
 
 PlayHand.o : $(PlayHand).hpp $(Hand).hpp $(Deck).hpp $(Dealer).hpp $(prefix)
-	$(CC) $(CFLAGS) -include $(prefix) $(PlayHand).cpp
+	$(CC) $(CFLAGS) $(headers) -include $(prefix) $(PlayHand).cpp
 
 # -------------------------------------------------------------------------
 # To make executable

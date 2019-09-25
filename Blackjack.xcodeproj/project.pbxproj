@@ -42,6 +42,7 @@
 		67BEF685232D9FB600ADFCDF /* PlayHand.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PlayHand.cpp; sourceTree = "<group>"; };
 		67BEF686232D9FB600ADFCDF /* PlayHand.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = PlayHand.hpp; sourceTree = "<group>"; };
 		67BEF687232D9FB600ADFCDF /* prefix.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = prefix.hpp; sourceTree = "<group>"; };
+		67C01605233B4963007FCB1E /* stdafx.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = stdafx.h; path = Headers/stdafx.h; sourceTree = "<group>"; };
 		67D2E35D232B6582000322C5 /* Blackjack */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Blackjack; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -96,6 +97,7 @@
 		67D2E35F232B6582000322C5 /* source */ = {
 			isa = PBXGroup;
 			children = (
+				67C01605233B4963007FCB1E /* stdafx.h */,
 				67BEF684232D9FB600ADFCDF /* main.cpp */,
 				67BEF687232D9FB600ADFCDF /* prefix.hpp */,
 				67BEF67E232D9FB600ADFCDF /* Dealer.cpp */,
