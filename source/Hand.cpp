@@ -4,9 +4,9 @@
 	Created by John Nairn on July 28, 2008.
 	
     Copyright (c) 2008 John A. Nairn, All rights reserved.
-	see http://www.geditcom.com/Blackjack for documentation
 *********************************************************************/
 
+#include "stdafx.h"
 #include "Hand.hpp"
 #include "Deck.hpp"
 
@@ -142,7 +142,7 @@ float Hand::doubleExval(Deck &deck,Dealer &dealer)
 	}
 	
 	// double for expected value
-	return 2.*exval;
+	return 2.f*exval;
 }
 
 #pragma mark Hand::Splitting Calculations
@@ -219,19 +219,19 @@ float Hand::approxSplitPlay(Deck &deck,Dealer &dealer,bool resplit)
 			
 			float prob[10];
 			deck.probSplit234(firstCard,dealer,prob);
-			explay = 2.*prob[0]*ex2 + 3.*prob[8]*ex3 + (ex2+2.*ex3)*prob[9];
+			explay = 2.f*prob[0]*ex2 + 3.f*prob[8]*ex3 + (ex2+2.f*ex3)*prob[9];
 			if(deck.getNumber(firstCard)>1)
-			{	explay += prob[3]*4.*ex4 + prob[4]*(ex3+3.*ex4) + prob[5]*2.*(ex3+ex4)
-							 + prob[6]*(ex2+3.*ex4) + prob[7]*(ex2+ex3+2.*ex4);
+			{	explay += prob[3]*4.f*ex4 + prob[4]*(ex3+3.f*ex4) + prob[5]*2.f*(ex3+ex4)
+							 + prob[6]*(ex2+3.f*ex4) + prob[7]*(ex2+ex3+2.f*ex4);
 			}
 			// Griffin analysis
 			//explay = 2.*prob[0]*ex2 + 3.*prob[1]*ex3 + 4.*prob[2]*ex4;
 		}
 		else
-			explay = 2.*ex2;
+			explay = 2.f*ex2;
 	}
 	else
-		explay=2.*approxSplitExval(deck,dealer,resplit,0);
+		explay=2.f*approxSplitExval(deck,dealer,resplit,0);
 	
 	return explay;
 }
@@ -276,7 +276,11 @@ float Hand::approxSplitExval(Deck &deck,Dealer &dealer,bool resplit,int kout)
 // results is array of length 3
 void Hand::exactSplitCalcs(Deck &deck,Dealer &dealer,int maxSplitHands,int ddFlags,float *results)
 {
+#ifdef CONST_ARRAYS
+	Hand* hands[9];
+#else
 	Hand *hands[maxSplitHands];
+#endif
 	int i;
 	
 	for(i=0;i<3;i++) results[i]=0.;
@@ -386,7 +390,11 @@ float Hand::exactSplitExval(Deck &deck,Dealer &dealer,Hand **hands,int &numSplit
 void Hand::handExactSplitCalcs(Deck &deck,Dealer &dealer,int maxSplitHands,int ddFlags,float *results)
 {
 	handset handList;
+#ifdef CONST_ARRAYS
+	Hand* hands[9];
+#else
 	Hand *hands[maxSplitHands];
+#endif
 	
 	for(int i=0;i<3;i++) results[i]=0.;
 	

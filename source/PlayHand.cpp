@@ -4,9 +4,9 @@
 	Created by John Nairn on 8/7/08.
 	
     Copyright (c) 2008 John A. Nairn, All rights reserved.
-	see http://www.geditcom.com/Blackjack for documentation
 *********************************************************************/
 
+#include "stdafx.h"
 #include "Hand.hpp"
 #include "Deck.hpp"
 

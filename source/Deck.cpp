@@ -4,9 +4,9 @@
 	Created by John Nairn on July 28, 2008.
 	
     Copyright (c) 2008 John A. Nairn, All rights reserved.
-	see http://www.geditcom.com/Blackjack for documentation
 *********************************************************************/
 
+#include "stdafx.h"
 #include "Deck.hpp"
 #include "Dealer.hpp"
 
@@ -85,7 +85,7 @@ float Deck::probNotSplitCard(int splitCard,Dealer &dealer)
 		probSplit = (float)nc[splitCard]/(float)ncards;
 	
 	// one minus is probablity not a split card
-	return 1.-probSplit;
+	return 1.f-probSplit;
 }
 
 // Get probability splitting 2, 3, 4 hands
@@ -103,11 +103,11 @@ void Deck::probSplit234(int splitCard,Dealer &dealer,float *prob)
 		pnm3ss = (float)(nc[splitCard]-1)/(float)(ncards-4);
 		if(splitCard != (11-upcard))
 		{	float nmnj = (float)(ncards-nc[11-upcard]);
-			pns *= (nmnj-1.)/nmnj;
-			pnm1s *= (nmnj-2.)/(nmnj-1.);
-			pnm1ss *= (nmnj-2.)/(nmnj-1.);
-			pnm2ss *= (nmnj-3.)/(nmnj-2.);
-			pnm3ss *= (nmnj-4.)/(nmnj-3.);
+			pns *= (nmnj-1.f)/nmnj;
+			pnm1s *= (nmnj-2.f)/(nmnj-1.f);
+			pnm1ss *= (nmnj-2.f)/(nmnj-1.f);
+			pnm2ss *= (nmnj-3.f)/(nmnj-2.f);
+			pnm3ss *= (nmnj-4.f)/(nmnj-3.f);
 		}
 	}
 	else
@@ -119,20 +119,20 @@ void Deck::probSplit234(int splitCard,Dealer &dealer,float *prob)
 	}
 	
 	// Let n=nonsplit, s=split, x=any
-	prob[0] = (1.-pns)*(1.-pnm1s);						// nnxx (4) = P(2)
-	float probns = (1.-pns)*pnm1s;
-	float probsn = pns*(1-pnm1ss);
-	prob[8] = probsn*(1.-pnm2ss)*(1.-pnm3ss);			// snnn (1) = P(3/2)
-	prob[9] = probns*(1.-pnm2ss)*(1.-pnm3ss);			// nsnn (2) = P(3/1)
+	prob[0] = (1.f-pns)*(1.f-pnm1s);						// nnxx (4) = P(2)
+	float probns = (1.f-pns)*pnm1s;
+	float probsn = pns*(1.f-pnm1ss);
+	prob[8] = probsn*(1.f-pnm2ss)*(1.f-pnm3ss);			// snnn (1) = P(3/2)
+	prob[9] = probns*(1.f-pnm2ss)*(1.f-pnm3ss);			// nsnn (2) = P(3/1)
 	prob[1] = prob[8]+prob[9];							// nsnn + snnn (2) = P(3)
-	prob[2] = 1.-prob[0]-prob[1];						// the rest (10) = P(4)
+	prob[2] = 1.f-prob[0]-prob[1];						// the rest (10) = P(4)
 	
 	// partition prob[2] into specific orders
 	prob[3] = pns*pnm1ss;							// ssxx (4) = P(4/5)
 	prob[4] = probsn*pnm2ss;						// snsx (2) = P(4/4)
-	prob[5] = probsn*(1.-pnm2ss)*pnm3ss;			// snns (1) = P(4/3)
+	prob[5] = probsn*(1.f-pnm2ss)*pnm3ss;			// snns (1) = P(4/3)
 	prob[6] = probns*pnm2ss;						// nssx (2) = P(4/2)
-	prob[7] = probns*(1.-pnm2ss)*pnm3ss;			// nsns (1) = P(4/1)
+	prob[7] = probns*(1.f-pnm2ss)*pnm3ss;			// nsns (1) = P(4/1)
 	
 	//cout << " P[4]: " << prob[2] << " summed P[4]: " << (prob[3]+prob[4]+prob[5]+prob[6]+prob[7]) << endl;
 	
