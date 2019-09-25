@@ -4,9 +4,9 @@
 	Created by John Nairn on July 28, 2008.
 	
     Copyright (c) 2008 John A. Nairn, All rights reserved.
-	see http://www.geditcom.com/Blackjack for documentation
 *********************************************************************/
 
+#include "stdafx.h"
 #include "Hand.hpp"
 #include "Deck.hpp"
 #include "Dealer.hpp"
@@ -53,7 +53,7 @@ char *NextArgument(int,char * const [],int,char);
 // main entry point
 int main (int argc, char * const argv[])
 {
-	unsigned int parmInd,optInd;
+	int parmInd,optInd;
 	char *parm;
 	
 	// read options parameters
@@ -398,20 +398,20 @@ void produceTable(ostream &os,Dealer &dealer)
 			// assemble upcard analysis
 			float numCards[11];
 			for(int i=1;i<10;i++)
-				numCards[i] = 4.*ndecks;
-			numCards[10] = 16.*ndecks;
+				numCards[i] = 4.f*ndecks;
+			numCards[10] = 16.f*ndecks;
 			numCards[upcard]--;			// remove dealar upcard
-			float denom = (52.*ndecks-1.f)*(52.*ndecks-2.f);
+			float denom = (52.f*ndecks-1.f)*(52.f*ndecks-2.f);
 			if(comboRemove!=0)
 			{	numCards[comboRemove]--;		// remove extra card if used
-				denom = (52.*ndecks-2.f)*(52.*ndecks-3.f);
+				denom = (52.f*ndecks-2.f)*(52.f*ndecks-3.f);
 			}
 			
-			double ducValue = 0.;
+			float ducValue = 0.;
 			for(int c1=1;c1<=10;c1++)
 			{	for(int c2=1;c2<=c1;c2++)
 				{	// hand weight
-					float wt = c1!=c2 ? 2.*numCards[c1]*numCards[c2]/denom :
+					float wt = c1!=c2 ? 2.f*numCards[c1]*numCards[c2]/denom :
 					numCards[c1]*(numCards[c1]-1.f)/denom;
 					ducValue += wt*cval[c1][c2];
 				}
@@ -421,12 +421,12 @@ void produceTable(ostream &os,Dealer &dealer)
 			{	// ace and ten are conditioned on dealer not having blacking
 				// here account for chance dealer does have blackjack
 				os << "Cumulative\t" << ducValue << "\tif dealer does not have BJ" << endl;
-				float dealerBJ = numCards[11-upcard]/(52.*ndecks-1.f);
+				float dealerBJ = numCards[11-upcard]/(52.f*ndecks-1.f);
 				float playerBJ = 2.f*numCards[1]*numCards[10]/denom;
 				os << "Dealer BJ\t" << dealerBJ << endl;
 				os << "Player BJ\t" << playerBJ << endl;
 				// get total expected value
-				ducValue = ducValue*(1.-dealerBJ) - (1.-playerBJ)*dealerBJ;
+				ducValue = ducValue*(1.f-dealerBJ) - (1.f-playerBJ)*dealerBJ;
 				os << "Cumulative\t" << ducValue << "\ttotal" << endl;
 			}
 			else
@@ -556,13 +556,12 @@ void produceTable(ostream &os,Dealer &dealer)
 				float mean = hand.hitExval(theDeck,dealer)-hand.standExval(theDeck,dealer);
 				os << c1 << "\t" << 100.*mean ;
 				
-				
 				for(int c2=ACE;c2<=TEN;c2++)
 				{	// remove one card
 					theDeck.remove(c2);
 					//float exval = 0.5*hand.doubleExval(theDeck,dealer)-hand.standExval(theDeck,dealer);
 					float exval = hand.hitExval(theDeck,dealer)-hand.standExval(theDeck,dealer);
-					os << "\t" << 100.*(exval-mean) ;
+					os << "\t" << 100.f*(exval-mean) ;
 					theDeck.restore(c2);
 				}
 				
@@ -581,7 +580,7 @@ void produceTable(ostream &os,Dealer &dealer)
 				{	// remove one card
 					theDeck.remove(c2);
 					float exval = hand.hitExval(theDeck,dealer)-hand.standExval(theDeck,dealer);
-					os << "\t" << 100.*(exval-mean) ;
+					os << "\t" << 100.f*(exval-mean) ;
 					theDeck.restore(c2);
 				}
 				
@@ -600,7 +599,7 @@ void produceTable(ostream &os,Dealer &dealer)
 				{	// remove one card
 					theDeck.remove(c2);
 					float exval = hand.doubleExval(theDeck,dealer)-hand.hitExval(theDeck,dealer);
-					os << "\t" << 100.*(exval-mean) ;
+					os << "\t" << 100.f*(exval-mean) ;
 					theDeck.restore(c2);
 				}
 				
@@ -622,7 +621,7 @@ void produceTable(ostream &os,Dealer &dealer)
 					theDeck.remove(c2);
 					alt = hit ? hand.hitExval(theDeck,dealer) : hand.standExval(theDeck,dealer) ;
 					float exval = hand.doubleExval(theDeck,dealer)-alt;
-					os << "\t" << 100.*(exval-mean) ;
+					os << "\t" << 100.f*(exval-mean) ;
 					theDeck.restore(c2);
 				}
 				
@@ -655,7 +654,7 @@ void produceTable(ostream &os,Dealer &dealer)
 					alt = hit ? hand.hitExval(theDeck,dealer) : hand.standExval(theDeck,dealer) ;
 					hand.unhit(c1);
 					float exval = hand.approxSplitPlay(theDeck,dealer,handResplit)-alt;
-					os << "\t" << 100.*(exval-mean) ;
+					os << "\t" << 100.f*(exval-mean) ;
 					theDeck.restore(c2);
 				}
 				
@@ -676,9 +675,9 @@ void produceTable(ostream &os,Dealer &dealer)
 	if(comboCalcs)
 	{	// check for all upcards
 		float gameExval = 0.;
-		float wt = 4./52.;
+		float wt = 4.f/52.f;
 		for(int i=1;i<10;i++) gameExval += wt*cupExval[i];
-		gameExval += 4.*wt*cupExval[10];
+		gameExval += 4.f*wt*cupExval[10];
 		
 		// were they all done?
 		if(gameExval > -10.)

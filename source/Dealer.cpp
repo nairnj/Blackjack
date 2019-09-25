@@ -4,9 +4,9 @@
 	Created by John Nairn on July 28, 2008.
 	
     Copyright (c) 2008 John A. Nairn, All rights reserved.
-	see http://www.geditcom.com/Blackjack for documentation
 *********************************************************************/
 
+#include "stdafx.h"
 #include "Hand.hpp"
 #include "Deck.hpp"
 
@@ -14,10 +14,10 @@
 
 // Constructors
 Dealer::Dealer()
-{	hitsSoft17=false;
-	ddAfterSplit=DDNone;
+{	hitsSoft17 = false;
+	ddAfterSplit = DDNone;
 	hand = new Hand();
-	Tarray=NULL;
+	Tarray = NULL;
 	initCacheTable(0);
 }
 
@@ -62,17 +62,17 @@ void Dealer::initCacheTable(int size)
 		}
 		
 		// pointers into the Tarray
-		blen=tarraySize*(size_t)sizeof(long *);
+		blen = tarraySize*(size_t)sizeof(long *);
 		Tj = (unsigned long **)malloc(blen);
 		if(Tj==NULL)
 		{	free(Tarray);
-			Tarray=NULL;
+			Tarray = NULL;
 			size--;
 			continue;
 		}
-		unsigned long *Tjptr=Tarray;
+		unsigned long *Tjptr = Tarray;
 		for(i=0; i<tarraySize; i++)
-		{	Tj[i]=Tjptr;
+		{	Tj[i] = Tjptr;
 			Tjptr += 11;
 		}
 		
@@ -94,7 +94,7 @@ void Dealer::initCacheTable(int size)
 	// fill the Tj[i][j] = T_(i+1)(j) array
 	for(i=0; i<tarraySize; i++)
 	{	for(j=0; j<11; j++)
-			Tj[i][j]=GetTj(i+1,j);
+			Tj[i][j] = GetTj(i+1,j);
 	}
 	
 	cacheSize=size;
@@ -107,7 +107,7 @@ unsigned long Dealer::GetTj(int j,int x)
 	if(x==0) return 0;
 	double tjcalc=1.;
 	for(int i=1; i<=j; i++)
-		tjcalc=tjcalc*(x-1+i)/i;
+		tjcalc = tjcalc*(x-1+i)/i;
 	return((long)(tjcalc+0.5));
 }
 
@@ -129,7 +129,7 @@ void Dealer::getPlayerExVals(Deck &deck,DealerProbs *probs)
 			address+=Tj[cacheSize-i-1][removed[i]];
 		
 		if(hold[address].p[0]<4.)
-		{	*probs=hold[address];
+		{	*probs = hold[address];
 			return;
 		}
 		hasAddress=true;
@@ -261,7 +261,7 @@ void Dealer::splitHitDealer(Deck &deck,DealerProbs *probs,int splitCard,int kout
 
 // Convert dealer weight for card i to conditional weight given kout (!=0) cards of type splitCard known to be in player's hand
 float Dealer::conditionalSplitWt(float wt,int i,Deck &deck,int splitCard,int kout)
-{	float ntot=(float)deck.getTotalCards()+1.;			// number before card i was removed
+{	float ntot=(float)deck.getTotalCards()+1.f;			// number before card i was removed
 	wt*=ntot/(ntot-kout);							// input wt = n(i)/ntot, now wt = n(i)/(ntot-k)
 	if(i!=splitCard)
 	{	float nj=(float)deck.getNumber(splitCard);

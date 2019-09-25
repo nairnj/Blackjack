@@ -4,7 +4,6 @@
 	Created by John Nairn on July 28, 2008.
 	
     Copyright (c) 2008 John A. Nairn, All rights reserved.
-	see http://www.geditcom.com/Blackjack for documentation
 *********************************************************************/
 
 #ifndef _DEALER_

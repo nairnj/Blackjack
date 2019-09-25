@@ -4,7 +4,6 @@
 	Created by John Nairn on 8/7/08.
 	
     Copyright (c) 2008 John A. Nairn, All rights reserved.
-	see http://www.geditcom.com/Blackjack for documentation
 *********************************************************************/
 
 #ifndef _PLAYHAND_

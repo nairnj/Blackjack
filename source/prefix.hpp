@@ -4,12 +4,12 @@
     Created by John Nairn on July 28, 2008.
 	
     Copyright (c) 2008 John A. Nairn, All rights reserved.
-	see http://www.geditcom.com/Blackjack for documentation
 *********************************************************************/
 
 // C includes
 #ifdef WINDOWS_EXE
 #include <stdio.h>
+#include <ctime>
 #endif
 #include <cstdio>
 #include <stdlib.h>
