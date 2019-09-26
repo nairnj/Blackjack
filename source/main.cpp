@@ -682,7 +682,7 @@ void produceTable(ostream &os,Dealer &dealer)
 		// were they all done?
 		if(gameExval > -10.)
 		{	os << "\nFull Game Analysis" << endl;
-			os << "Decks\t" << 1 << endl;
+			os << "Decks\t" << ndecks << endl;
 			if(hitsSoft17)
 				os << "Dealer hits soft 17" << endl;
 			else
